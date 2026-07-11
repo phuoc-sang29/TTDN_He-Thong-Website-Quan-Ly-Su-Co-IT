@@ -1,0 +1,5 @@
+# Biến môi trường — KHÔNG bao giờ commit lên git
+.env
+.env.local
+.env.production
+.env*.local

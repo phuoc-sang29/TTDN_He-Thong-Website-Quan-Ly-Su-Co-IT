@@ -1,0 +1,33 @@
+# Biến môi trường — KHÔNG bao giờ commit lên git
+.env
+.env.local
+.env.production
+.env*.local
+
+# Node modules
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Build output
+frontend/dist/
+frontend/build/
+
+# Vite cache
+frontend/.vite/
+
+# Log files
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
+.idea/
+
+# Temporary
+*.tmp
+*.temp
