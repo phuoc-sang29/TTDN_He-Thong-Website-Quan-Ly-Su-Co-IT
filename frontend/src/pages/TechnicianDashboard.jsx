@@ -8,6 +8,7 @@ import StatusBadge from '../components/StatusBadge';
 import TicketChat from '../components/TicketChat';
 import CreateTicketModal from '../components/CreateTicketModal';
 import AIChatWidget from '../components/AIChatWidget';
+import WorkSchedule from '../components/WorkSchedule';
 import { tAction, tDevice } from '../lib/i18nMaps';
 
 const STATUSES = ['Chờ xử lý', 'Đang xử lý', 'Chờ linh kiện', 'Đã hoàn thành', 'Khẩn cấp'];
@@ -48,6 +49,7 @@ function TechnicianDashboard() {
     const [loadingL, setLoadingL]         = useState(false);
     const [filterStatus, setFilterStatus] = useState('all');
     const [showCreate, setShowCreate]     = useState(false);
+    const [activeView, setActiveView]     = useState('tickets'); // 'tickets' | 'schedule'
 
     // Form cap nhat tien do
     const [actionType, setActionType]     = useState('Xử lý');
@@ -183,7 +185,18 @@ function TechnicianDashboard() {
                 <span className="text-zinc-600">{t('stats.done')}: <span className="text-emerald-400 font-semibold">{done}</span></span>
                 <span className="text-zinc-600">{t('stats.processing')}: <span className="text-amber-400 font-semibold">{proc}</span></span>
                 <span className="text-zinc-600">{t('stats.waiting')}: <span className="text-zinc-400 font-semibold">{wait}</span></span>
-                <div className="ml-auto">
+                <div className="ml-auto flex items-center gap-2">
+                    <button
+                        onClick={() => setActiveView(v => v === 'tickets' ? 'schedule' : 'tickets')}
+                        className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border transition-all ${
+                            activeView === 'schedule'
+                                ? 'bg-teal-900/40 border-teal-700/60 text-teal-400'
+                                : 'border-zinc-800 text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
+                        }`}
+                    >
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        Lịch tuần
+                    </button>
                     <button
                         onClick={() => setShowCreate(true)}
                         className="flex items-center gap-1.5 bg-teal-700 hover:bg-teal-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-all duration-150"
@@ -196,6 +209,9 @@ function TechnicianDashboard() {
                 </div>
             </div>
 
+            {activeView === 'schedule' ? (
+                <div className="flex-1 overflow-y-auto"><WorkSchedule isAdmin={false} /></div>
+            ) : (
             <div className="flex flex-1 overflow-hidden">
                 {/* LEFT 30%: danh sach phieu */}
                 <aside className="w-[30%] min-w-[200px] max-w-[300px] border-r border-zinc-800/60 flex flex-col bg-zinc-950">
@@ -241,9 +257,13 @@ function TechnicianDashboard() {
                                     <div className="flex-1 min-w-0">
                                         <h2 className="text-white text-sm font-semibold leading-snug mb-2">{selected.issue_summary}</h2>
                                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                                            {selected.equipments && (
+                        {/* Device info with S/N */}
+                                        {selected.equipments && (
                                                 <span className="inline-flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 text-zinc-400 text-xs px-2 py-0.5 rounded-md">
                                                     {selected.equipments.device_type} — {selected.equipments.brand} {selected.equipments.model}
+                                                    {selected.equipments.serial_number && (
+                                                        <span className="text-zinc-600 font-mono">| S/N: {selected.equipments.serial_number}</span>
+                                                    )}
                                                 </span>
                                             )}
                                             {selected.equipments?.profiles?.full_name && (
@@ -392,6 +412,7 @@ function TechnicianDashboard() {
                     )}
                 </main>
             </div>
+            )}
 
             {showCreate && <CreateTicketModal onClose={() => setShowCreate(false)} onCreated={fetchTickets} />}
             <AIChatWidget />

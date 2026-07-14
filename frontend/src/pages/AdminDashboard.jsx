@@ -9,6 +9,7 @@ import AssignModal from '../components/AssignModal';
 import AIChatWidget from '../components/AIChatWidget';
 import RentalManagement from '../components/RentalManagement';
 import TicketChat from '../components/TicketChat';
+import WorkSchedule from '../components/WorkSchedule';
 
 const ROLE_OPTIONS = ['admin', 'technician', 'customer'];
 
@@ -166,6 +167,7 @@ function AdminDashboard() {
                         </span>
                     )}
                 </button>
+                <button className={tabClass('schedule')} onClick={() => setTab('schedule')}>Lịch tuần</button>
             </div>
 
             {/* Tab content */}
@@ -360,6 +362,8 @@ function AdminDashboard() {
                                             <th className="text-left px-4 py-3 font-medium">{t('eq.type')}</th>
                                             <th className="text-left px-4 py-3 font-medium">{t('eq.brand')}</th>
                                             <th className="text-left px-4 py-3 font-medium">{t('eq.model')}</th>
+                                            <th className="text-left px-4 py-3 font-medium">S/N</th>
+                                            <th className="text-left px-4 py-3 font-medium">Mã tài sản</th>
                                             <th className="text-left px-4 py-3 font-medium">{t('eq.owner')}</th>
                                             <th className="text-center px-4 py-3 font-medium">Cho thuê</th>
                                             <th className="text-left px-4 py-3 font-medium">{t('eq.date')}</th>
@@ -371,6 +375,8 @@ function AdminDashboard() {
                                                 <td className="px-4 py-3 text-zinc-300">{eq.device_type}</td>
                                                 <td className="px-4 py-3 text-zinc-400">{eq.brand || '—'}</td>
                                                 <td className="px-4 py-3 text-zinc-400">{eq.model || '—'}</td>
+                                                <td className="px-4 py-3 text-zinc-500 font-mono text-[11px]">{eq.serial_number || <span className="text-zinc-700 italic">Chưa nhập</span>}</td>
+                                                <td className="px-4 py-3 text-zinc-500 font-mono text-[11px]">{eq.asset_code || <span className="text-zinc-700 italic">Chưa nhập</span>}</td>
                                                 <td className="px-4 py-3 text-zinc-500">{eq.owner?.full_name || '—'}</td>
                                                 <td className="px-4 py-3 text-center">
                                                     <button
@@ -446,6 +452,10 @@ function AdminDashboard() {
                                 </div>
                             )}
                         </div>
+
+                    /* === SCHEDULE === */
+                    ) : tab === 'schedule' ? (
+                        <WorkSchedule isAdmin={true} />
 
                     /* === RENTAL === */
                     ) : tab === 'rental' ? (
